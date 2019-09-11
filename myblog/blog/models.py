@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Entry(models.Model):
   title = models.CharField(max_length=500)
@@ -9,6 +10,9 @@ class Entry(models.Model):
 
   def __str__(self):
     return self.title
+  
+  def get_absolute_url(self):
+    return reverse('entry_detail', kwargs={'pk': self.pk})
 
   class Meta:
     verbose_name_plural = "entries"

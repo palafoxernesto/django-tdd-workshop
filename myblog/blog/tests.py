@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import Entry
 
 class EntryModelTest(TestCase):
+
   def test_string_representation(self):
     entry = Entry(title="My entry title")
     self.assertEqual(str(entry), entry.title)
@@ -39,3 +40,26 @@ class HomePageTests(TestCase):
   def test_no_entries(self):
     response = self.client.get('/')
     self.assertContains(response, 'No blog entries yet.')
+
+
+class EntryViewTest(TestCase):
+
+  def setUp(self):
+      self.user = get_user_model().objects.create(username='some_user')
+      self.entry = Entry.objects.create(title='1-title', body='1-body',
+                                        author=self.user)
+  def test_get_absolute_url(self):
+    entry = Entry.objects.create(title='My entry title', author=self.user)
+    self.assertIsNotNone(entry.get_absolute_url())
+  
+  def test_title_in_entry(self):
+    response = self.client.get(self.entry.get_absolute_url())
+    self.assertContains(response, self.entry.title)
+  
+  def test_title_in_entry(self):
+    response = self.client.get(self.entry.get_absolute_url())
+    self.assertContains(response, self.entry.body)
+
+  def test_basic_view(self):
+      response = self.client.get(self.entry.get_absolute_url())
+      self.assertEqual(response.status_code, 200)
