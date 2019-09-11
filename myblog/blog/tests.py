@@ -64,7 +64,12 @@ class EntryViewTest(TestCase):
       response = self.client.get(self.entry.get_absolute_url())
       self.assertEqual(response.status_code, 200)
 
+  def test_no_comments(self):
+      response = self.client.get(self.entry.get_absolute_url())
+      self.assertContains(response, 'No comments yet.')
+
 class CommentModelTest(TestCase):
   def test_string_representation(self):
     comment = Comment(body="My comment body")
     self.assertEqual(str(comment), "My comment body")
+  
